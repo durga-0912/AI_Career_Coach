@@ -2,18 +2,27 @@ const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const micBtn = document.getElementById("micBtn");
 
-// SEND MESSAGE
-function sendMessage() {
-    const text = userInput.value.trim();
-    if (!text) return;
+// Add message to chat
+function addMessage(text, sender) {
+    const div = document.createElement("div");
+    div.className = sender === "user" ? "user-msg" : "bot-msg";
+    div.innerText = text;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
-    addMessage(text, "user");
+// Send message
+function sendMessage() {
+    const msg = userInput.value.trim();
+    if (!msg) return;
+
+    addMessage(msg, "user");
     userInput.value = "";
 
     fetch("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text })
+        body: JSON.stringify({ message: msg })
     })
     .then(res => res.json())
     .then(data => {
@@ -21,19 +30,14 @@ function sendMessage() {
     });
 }
 
-// ADD MESSAGE TO CHAT
-function addMessage(text, sender) {
-    const msg = document.createElement("div");
-    msg.className = sender === "user" ? "user-msg" : "bot-msg";
-    msg.innerText = text;
-    chatBox.appendChild(msg);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
+// 🎤 MIC – Speech to Text (STABLE VERSION)
+if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+    const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
 
-// 🎤 SPEECH TO TEXT (MIC)
-if ('webkitSpeechRecognition' in window) {
-    const recognition = new webkitSpeechRecognition();
+    const recognition = new SpeechRecognition();
     recognition.lang = "en-IN";
+    recognition.interimResults = false;
     recognition.continuous = false;
 
     micBtn.onclick = () => {
@@ -42,16 +46,17 @@ if ('webkitSpeechRecognition' in window) {
     };
 
     recognition.onresult = (event) => {
-        userInput.value = event.results[0][0].transcript;
+        const text = event.results[0][0].transcript;
+        userInput.value = text;
         micBtn.innerText = "🎤";
     };
 
     recognition.onerror = () => {
         micBtn.innerText = "🎤";
-        alert("Mic error / permission denied");
+        alert("Mic permission deny pannirukanga. Allow pannu.");
     };
 } else {
     micBtn.onclick = () => {
-        alert("Speech Recognition not supported in this browser");
+        alert("Mic not supported in this browser. Use Chrome.");
     };
 }
