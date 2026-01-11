@@ -1,26 +1,28 @@
 from flask import Flask, render_template, request, jsonify
 from openai import OpenAI
 import os
+import re
 
 app = Flask(__name__)
-
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 SYSTEM_PROMPT = """
 You are an AI Career Coach for college students.
 
 Rules:
-- Reply neatly in short points.
-- Avoid long paragraphs.
-- Use simple English or simple Tamil (spoken style).
-- If user uses Tamil, reply in Tamil.
-- If user uses English, reply in English.
-- Give career guidance, resume help, interview tips.
-
-Formatting:
-- Use numbered or bullet points.
-- Keep answers clean and readable.
+- Answer in simple points
+- No markdown
+- No symbols like ** ### ---
+- Short, clear sentences
+- Step by step guidance
+- Friendly tone
 """
+
+def clean_text(text):
+    # Remove markdown symbols
+    text = re.sub(r"\*\*|###|##|#", "", text)
+    text = re.sub(r"- ", "• ", text)
+    return text.strip()
 
 @app.route("/")
 def home():
@@ -30,18 +32,18 @@ def home():
 def chat():
     user_msg = request.json.get("message")
 
-    messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": user_msg}
-    ]
-
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=messages
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_msg}
+        ]
     )
 
     reply = response.choices[0].message.content
+    reply = clean_text(reply)
+
     return jsonify({"reply": reply})
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

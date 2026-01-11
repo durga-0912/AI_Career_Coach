@@ -4,24 +4,22 @@
     <meta charset="UTF-8">
     <title>AI Career Coach</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
-<div class="app-bg">
-    <div class="chat-container">
+<div class="app">
+    <div class="header">
+        🎓 AI Career Coach
+    </div>
 
-        <div class="header">🎓 AI Career Coach</div>
+    <div id="chatBox" class="chat-box"></div>
 
-        <div id="chatBox" class="chat-box"></div>
-
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Ask about your career..." />
-            <button class="icon-btn" onclick="startMic()">🎤</button>
-            <button class="send-btn" onclick="sendMessage()">➤</button>
-        </div>
-
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Type or speak your question..." />
+        
+        <button class="icon-btn" onclick="startMic()">🎤</button>
+        <button class="send-btn" onclick="sendMessage()">➤</button>
     </div>
 </div>
 

@@ -1,14 +1,18 @@
 const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 
+// Add message to UI
 function addMessage(text, sender) {
-    const msg = document.createElement("div");
-    msg.className = "message " + sender;
-    msg.innerText = text;
-    chatBox.appendChild(msg);
+    const div = document.createElement("div");
+    div.className = "msg " + sender;
+    div.innerText = text;
+    chatBox.appendChild(div);
     chatBox.scrollTop = chatBox.scrollHeight;
+
+    if (sender === "bot") speak(text);
 }
 
+// Send text message
 function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
@@ -23,22 +27,35 @@ function sendMessage() {
     })
     .then(res => res.json())
     .then(data => {
-        addMessage(data.reply, "bot");
+        // Clean markdown symbols
+        const cleanText = data.reply
+            .replace(/\*\*/g, "")
+            .replace(/###/g, "")
+            .replace(/##/g, "")
+            .replace(/\*/g, "");
+
+        addMessage(cleanText, "bot");
     });
 }
 
-/* 🎤 MIC FUNCTION */
+// 🎤 Voice input
 function startMic() {
-    if (!('webkitSpeechRecognition' in window)) {
-        alert("Mic not supported in this browser");
-        return;
-    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
 
-    const recognition = new webkitSpeechRecognition();
     recognition.lang = "en-IN";
     recognition.start();
 
     recognition.onresult = function(event) {
         userInput.value = event.results[0][0].transcript;
+        sendMessage();
     };
+}
+
+// 🔊 Bot voice reply (Tamil + English)
+function speak(text) {
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = /[அ-ஹ]/.test(text) ? "ta-IN" : "en-IN";
+    speech.rate = 1;
+    window.speechSynthesis.speak(speech);
 }

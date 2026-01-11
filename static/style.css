@@ -1,14 +1,10 @@
 * {
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: Arial, sans-serif;
 }
 
 body {
     margin: 0;
-    height: 100vh;
-}
-
-.app-bg {
     height: 100vh;
     background: linear-gradient(135deg, #6a11cb, #2575fc);
     display: flex;
@@ -16,12 +12,12 @@ body {
     align-items: center;
 }
 
-.chat-container {
+.app {
     width: 100%;
     max-width: 420px;
-    height: 92vh;
-    background: #ffffff;
-    border-radius: 18px;
+    height: 90vh;
+    background: #f9f9f9;
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -30,8 +26,8 @@ body {
 .header {
     background: #2575fc;
     color: white;
-    text-align: center;
     padding: 14px;
+    text-align: center;
     font-weight: bold;
 }
 
@@ -39,28 +35,25 @@ body {
     flex: 1;
     padding: 12px;
     overflow-y: auto;
-    background: #f5f7fb;
 }
 
-.message {
+.msg {
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
     max-width: 85%;
-    margin-bottom: 10px;
-    padding: 10px 14px;
-    border-radius: 14px;
-    font-size: 14px;
     line-height: 1.4;
 }
 
 .user {
     background: #2575fc;
     color: white;
-    align-self: flex-end;
+    margin-left: auto;
 }
 
 .bot {
-    background: #e4e7ee;
-    color: #333;
-    align-self: flex-start;
+    background: #e6e6e6;
+    color: #000;
 }
 
 .input-area {
@@ -68,30 +61,30 @@ body {
     gap: 6px;
     padding: 10px;
     border-top: 1px solid #ddd;
-    background: white;
 }
 
-.input-area input {
+input {
     flex: 1;
     padding: 10px;
-    border-radius: 20px;
+    border-radius: 8px;
     border: 1px solid #ccc;
     outline: none;
 }
 
 .icon-btn {
     border: none;
-    background: #e0e0e0;
-    border-radius: 50%;
-    padding: 10px 12px;
-    cursor: pointer;
+    background: #ff9800;
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
 }
 
 .send-btn {
     border: none;
     background: #2575fc;
     color: white;
-    border-radius: 50%;
+    border-radius: 8px;
     padding: 10px 14px;
-    cursor: pointer;
+    font-size: 16px;
 }
