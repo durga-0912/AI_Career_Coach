@@ -2,16 +2,16 @@ const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const micBtn = document.getElementById("micBtn");
 
-// Add message to chat
+// add message
 function addMessage(text, sender) {
     const div = document.createElement("div");
-    div.className = sender === "user" ? "user-msg" : "bot-msg";
+    div.className = sender === "user" ? "message user" : "message bot";
     div.innerText = text;
     chatBox.appendChild(div);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Send message
+// send message
 function sendMessage() {
     const msg = userInput.value.trim();
     if (!msg) return;
@@ -25,12 +25,10 @@ function sendMessage() {
         body: JSON.stringify({ message: msg })
     })
     .then(res => res.json())
-    .then(data => {
-        addMessage(data.reply, "bot");
-    });
+    .then(data => addMessage(data.reply, "bot"));
 }
 
-// 🎤 MIC – Speech to Text (STABLE VERSION)
+// 🎤 MIC (FINAL STABLE VERSION)
 if (window.SpeechRecognition || window.webkitSpeechRecognition) {
     const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -46,17 +44,16 @@ if (window.SpeechRecognition || window.webkitSpeechRecognition) {
     };
 
     recognition.onresult = (event) => {
-        const text = event.results[0][0].transcript;
-        userInput.value = text;
+        userInput.value = event.results[0][0].transcript;
         micBtn.innerText = "🎤";
     };
 
     recognition.onerror = () => {
         micBtn.innerText = "🎤";
-        alert("Mic permission deny pannirukanga. Allow pannu.");
+        alert("Mic permission allow pannu (browser top-la)");
     };
 } else {
     micBtn.onclick = () => {
-        alert("Mic not supported in this browser. Use Chrome.");
+        alert("Mic support illa. Chrome / Edge use pannu.");
     };
 }

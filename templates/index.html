@@ -8,19 +8,15 @@
 </head>
 <body>
 
-<div class="chat-container">
-    <div class="header">AI Career Coach</div>
+<div class="app">
+    <div class="top-bar">🎓 AI Career Coach</div>
 
-    <div id="chatBox" class="chat-box"></div>
+    <div id="chatBox" class="messages"></div>
 
-    <div class="input-area">
+    <div class="input-bar">
         <input type="text" id="userInput" placeholder="Ask about your career..." />
-        <button onclick="sendMessage()">Send</button>
-
-        <!-- 🎤 MIC BUTTON -->
-        <button id="micBtn" title="Speak">
-            🎤
-        </button>
+        <button id="micBtn">🎤</button>
+        <button onclick="sendMessage()">➤</button>
     </div>
 </div>
 
