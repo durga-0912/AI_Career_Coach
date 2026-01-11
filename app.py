@@ -73,7 +73,8 @@ def chat():
 
    raw_reply = response.choices[0].message.content
 reply = clean_text(raw_reply)
-return jsonify({"reply": reply})
+clean_reply = clean_ai_text(ai_reply)
+return jsonify({"reply": clean_reply})
 
 if __name__ == "__main__":
     app.run(debug=True)
