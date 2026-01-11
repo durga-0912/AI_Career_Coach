@@ -1,19 +1,15 @@
 const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
+const micBtn = document.getElementById("micBtn");
+const scanBtn = document.getElementById("scanBtn");
+const video = document.getElementById("preview");
 
-function addMessage(text, sender) {
-    const div = document.createElement("div");
-    div.className = sender === "user" ? "user-msg" : "bot-msg";
-    div.innerText = text;
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
+/* CHAT SEND */
 function sendMessage() {
     const msg = userInput.value.trim();
     if (!msg) return;
 
-    addMessage(msg, "user");
+    chatBox.innerHTML += `<div><b>You:</b> ${msg}</div>`;
     userInput.value = "";
 
     fetch("/chat", {
@@ -22,24 +18,42 @@ function sendMessage() {
         body: JSON.stringify({ message: msg })
     })
     .then(res => res.json())
-    .then(data => addMessage(data.reply, "bot"));
+    .then(data => {
+        chatBox.innerHTML += `<div><b>AI:</b> ${data.reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
 }
 
-/* 🎤 MIC */
-function startMic() {
-    if (!("webkitSpeechRecognition" in window)) {
-        alert("Mic works only in Chrome browser");
+/* 🎤 MIC (Speech to Text) */
+micBtn.onclick = () => {
+    if (!('webkitSpeechRecognition' in window)) {
+        alert("Speech not supported");
         return;
     }
 
     const recognition = new webkitSpeechRecognition();
     recognition.lang = "en-IN";
-
-    recognition.onresult = function(event) {
-        const text = event.results[0][0].transcript;
-        userInput.value = text;
-        sendMessage();
-    };
-
     recognition.start();
-}
+
+    recognition.onresult = (event) => {
+        userInput.value = event.results[0][0].transcript;
+    };
+};
+
+/* 📷 SCANNER (Camera) */
+scanBtn.onclick = async () => {
+    try {
+        alert("Allow camera access");
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" }
+        });
+
+        video.style.display = "block";
+        video.srcObject = stream;
+        await video.play();
+
+    } catch (err) {
+        alert("Camera error: " + err.message);
+    }
+};

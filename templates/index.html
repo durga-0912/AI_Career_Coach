@@ -16,8 +16,16 @@
     <div class="input-area">
         <input type="text" id="userInput" placeholder="Ask about your career..." />
         <button onclick="sendMessage()">Send</button>
-        <button id="micBtn" onclick="startMic()">🎤</button>
+
+        <!-- 🎤 MIC BUTTON -->
+        <button id="micBtn">🎤</button>
+
+        <!-- 📷 SCANNER BUTTON -->
+        <button id="scanBtn">📷</button>
     </div>
+
+    <!-- CAMERA PREVIEW -->
+    <video id="preview" autoplay></video>
 </div>
 
 <script src="/static/script.js"></script>
