@@ -1,59 +1,57 @@
 const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
 const micBtn = document.getElementById("micBtn");
-const scanBtn = document.getElementById("scanBtn");
-const video = document.getElementById("preview");
 
-/* CHAT SEND */
+// SEND MESSAGE
 function sendMessage() {
-    const msg = userInput.value.trim();
-    if (!msg) return;
+    const text = userInput.value.trim();
+    if (!text) return;
 
-    chatBox.innerHTML += `<div><b>You:</b> ${msg}</div>`;
+    addMessage(text, "user");
     userInput.value = "";
 
     fetch("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg })
+        body: JSON.stringify({ message: text })
     })
     .then(res => res.json())
     .then(data => {
-        chatBox.innerHTML += `<div><b>AI:</b> ${data.reply}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
+        addMessage(data.reply, "bot");
     });
 }
 
-/* 🎤 MIC (Speech to Text) */
-micBtn.onclick = () => {
-    if (!('webkitSpeechRecognition' in window)) {
-        alert("Speech not supported");
-        return;
-    }
+// ADD MESSAGE TO CHAT
+function addMessage(text, sender) {
+    const msg = document.createElement("div");
+    msg.className = sender === "user" ? "user-msg" : "bot-msg";
+    msg.innerText = text;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
+// 🎤 SPEECH TO TEXT (MIC)
+if ('webkitSpeechRecognition' in window) {
     const recognition = new webkitSpeechRecognition();
     recognition.lang = "en-IN";
-    recognition.start();
+    recognition.continuous = false;
+
+    micBtn.onclick = () => {
+        recognition.start();
+        micBtn.innerText = "🎙️";
+    };
 
     recognition.onresult = (event) => {
         userInput.value = event.results[0][0].transcript;
+        micBtn.innerText = "🎤";
     };
-};
 
-/* 📷 SCANNER (Camera) */
-scanBtn.onclick = async () => {
-    try {
-        alert("Allow camera access");
-
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "environment" }
-        });
-
-        video.style.display = "block";
-        video.srcObject = stream;
-        await video.play();
-
-    } catch (err) {
-        alert("Camera error: " + err.message);
-    }
-};
+    recognition.onerror = () => {
+        micBtn.innerText = "🎤";
+        alert("Mic error / permission denied");
+    };
+} else {
+    micBtn.onclick = () => {
+        alert("Speech Recognition not supported in this browser");
+    };
+}
