@@ -1,3 +1,12 @@
+import re
+
+def clean_text(text):
+    # Remove markdown symbols
+    text = re.sub(r'\*\*', '', text)
+    text = re.sub(r'#+', '', text)
+    text = re.sub(r'- ', '', text)
+    text = re.sub(r'\n{2,}', '\n', text)
+    return text.strip()
 from flask import Flask, render_template, request, jsonify
 from openai import OpenAI
 import os
@@ -10,6 +19,12 @@ SYSTEM_PROMPT = """
 You are an AI Career Coach for college students.
 
 Rules:
+
+- No markdown.
+- No symbols.
+- Plain text only.
+- Short answers.
+- Max 5 lines.
 - Answer in simple points
 - No markdown
 - No symbols like ** ### ---
@@ -56,10 +71,9 @@ def chat():
         ]
     )
 
-    reply = response.choices[0].message.content
-    reply = clean_text(reply)
-
-    return jsonify({"reply": reply})
+   raw_reply = response.choices[0].message.content
+reply = clean_text(raw_reply)
+return jsonify({"reply": reply})
 
 if __name__ == "__main__":
     app.run(debug=True)
