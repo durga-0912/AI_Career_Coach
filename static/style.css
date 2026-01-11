@@ -1,90 +1,77 @@
-* {
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+body, html {
+  margin: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
 }
 
-body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.app-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.app {
-    width: 100%;
-    max-width: 420px;
-    height: 90vh;
-    background: #f9f9f9;
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+.chat-container {
+  width: 360px;
+  height: 620px;
+  background: #fff;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
-    background: #2575fc;
-    color: white;
-    padding: 14px;
-    text-align: center;
-    font-weight: bold;
+  background: #2575fc;
+  color: #fff;
+  padding: 14px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 16px 16px 0 0;
 }
 
 .chat-box {
-    flex: 1;
-    padding: 12px;
-    overflow-y: auto;
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
 }
 
 .msg {
-    margin-bottom: 12px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    max-width: 85%;
-    line-height: 1.4;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  line-height: 1.4;
+  white-space: pre-line;
 }
 
 .user {
-    background: #2575fc;
-    color: white;
-    margin-left: auto;
+  background: #2575fc;
+  color: #fff;
+  align-self: flex-end;
 }
 
 .bot {
-    background: #e6e6e6;
-    color: #000;
+  background: #f1f1f1;
+  color: #000;
 }
 
 .input-area {
-    display: flex;
-    gap: 6px;
-    padding: 10px;
-    border-top: 1px solid #ddd;
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+  border-top: 1px solid #ddd;
 }
 
 input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    outline: none;
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
 }
 
-.icon-btn {
-    border: none;
-    background: #ff9800;
-    color: white;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;
-}
-
-.send-btn {
-    border: none;
-    background: #2575fc;
-    color: white;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 16px;
+button {
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
 }

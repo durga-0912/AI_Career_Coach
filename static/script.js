@@ -1,61 +1,51 @@
-const chatBox = document.getElementById("chatBox");
-const userInput = document.getElementById("userInput");
+let voiceOn = true;
+const synth = window.speechSynthesis;
 
-// Add message to UI
-function addMessage(text, sender) {
-    const div = document.createElement("div");
-    div.className = "msg " + sender;
-    div.innerText = text;
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    if (sender === "bot") speak(text);
+function addMsg(text, cls) {
+  const div = document.createElement("div");
+  div.className = "msg " + cls;
+  div.innerText = text;
+  document.getElementById("chatBox").appendChild(div);
+  div.scrollIntoView();
 }
 
-// Send text message
 function sendMessage() {
-    const text = userInput.value.trim();
-    if (!text) return;
+  const input = document.getElementById("userInput");
+  if (!input.value) return;
 
-    addMessage(text, "user");
-    userInput.value = "";
+  addMsg(input.value, "user");
 
-    fetch("/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text })
-    })
-    .then(res => res.json())
-    .then(data => {
-        // Clean markdown symbols
-        const cleanText = data.reply
-            .replace(/\*\*/g, "")
-            .replace(/###/g, "")
-            .replace(/##/g, "")
-            .replace(/\*/g, "");
+  fetch("/chat", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({message: input.value})
+  })
+  .then(res => res.json())
+  .then(data => {
+    addMsg(data.reply, "bot");
+    speak(data.reply);
+  });
 
-        addMessage(cleanText, "bot");
-    });
+  input.value = "";
 }
 
-// 🎤 Voice input
 function startMic() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-
-    recognition.lang = "en-IN";
-    recognition.start();
-
-    recognition.onresult = function(event) {
-        userInput.value = event.results[0][0].transcript;
-        sendMessage();
-    };
+  const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  rec.lang = "ta-IN";   // Tamil mic
+  rec.start();
+  rec.onresult = e => {
+    document.getElementById("userInput").value = e.results[0][0].transcript;
+    sendMessage();
+  };
 }
 
-// 🔊 Bot voice reply (Tamil + English)
 function speak(text) {
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = /[அ-ஹ]/.test(text) ? "ta-IN" : "en-IN";
-    speech.rate = 1;
-    window.speechSynthesis.speak(speech);
+  if (!voiceOn) return;
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.lang = "ta-IN";   // Tamil voice
+  synth.speak(msg);
+}
+
+function toggleVoice() {
+  voiceOn = !voiceOn;
 }
