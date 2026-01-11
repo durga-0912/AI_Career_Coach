@@ -1,59 +1,44 @@
 const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
-const micBtn = document.getElementById("micBtn");
 
-// add message
 function addMessage(text, sender) {
-    const div = document.createElement("div");
-    div.className = sender === "user" ? "message user" : "message bot";
-    div.innerText = text;
-    chatBox.appendChild(div);
+    const msg = document.createElement("div");
+    msg.className = "message " + sender;
+    msg.innerText = text;
+    chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// send message
 function sendMessage() {
-    const msg = userInput.value.trim();
-    if (!msg) return;
+    const text = userInput.value.trim();
+    if (!text) return;
 
-    addMessage(msg, "user");
+    addMessage(text, "user");
     userInput.value = "";
 
     fetch("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg })
+        body: JSON.stringify({ message: text })
     })
     .then(res => res.json())
-    .then(data => addMessage(data.reply, "bot"));
+    .then(data => {
+        addMessage(data.reply, "bot");
+    });
 }
 
-// 🎤 MIC (FINAL STABLE VERSION)
-if (window.SpeechRecognition || window.webkitSpeechRecognition) {
-    const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
+/* 🎤 MIC FUNCTION */
+function startMic() {
+    if (!('webkitSpeechRecognition' in window)) {
+        alert("Mic not supported in this browser");
+        return;
+    }
 
-    const recognition = new SpeechRecognition();
+    const recognition = new webkitSpeechRecognition();
     recognition.lang = "en-IN";
-    recognition.interimResults = false;
-    recognition.continuous = false;
+    recognition.start();
 
-    micBtn.onclick = () => {
-        recognition.start();
-        micBtn.innerText = "🎙️";
-    };
-
-    recognition.onresult = (event) => {
+    recognition.onresult = function(event) {
         userInput.value = event.results[0][0].transcript;
-        micBtn.innerText = "🎤";
-    };
-
-    recognition.onerror = () => {
-        micBtn.innerText = "🎤";
-        alert("Mic permission allow pannu (browser top-la)");
-    };
-} else {
-    micBtn.onclick = () => {
-        alert("Mic support illa. Chrome / Edge use pannu.");
     };
 }

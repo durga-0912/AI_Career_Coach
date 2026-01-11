@@ -1,83 +1,97 @@
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
     height: 100vh;
+}
+
+.app-bg {
+    height: 100vh;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.app {
+.chat-container {
     width: 100%;
     max-width: 420px;
-    height: 90vh;
-    background: white;
+    height: 92vh;
+    background: #ffffff;
     border-radius: 18px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
-.top-bar {
-    background: #4f46e5;
+.header {
+    background: #2575fc;
     color: white;
-    padding: 14px;
     text-align: center;
+    padding: 14px;
     font-weight: bold;
 }
 
-.messages {
+.chat-box {
     flex: 1;
     padding: 12px;
     overflow-y: auto;
-    background: #f4f6fb;
+    background: #f5f7fb;
 }
 
 .message {
-    max-width: 75%;
-    padding: 10px 14px;
+    max-width: 85%;
     margin-bottom: 10px;
-    border-radius: 16px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 14px;
     line-height: 1.4;
 }
 
 .user {
-    background: #4f46e5;
+    background: #2575fc;
     color: white;
-    margin-left: auto;
+    align-self: flex-end;
 }
 
 .bot {
-    background: #e5e7eb;
-    color: #111;
-    margin-right: auto;
-    white-space: pre-line;
+    background: #e4e7ee;
+    color: #333;
+    align-self: flex-start;
 }
 
-.input-bar {
+.input-area {
     display: flex;
     gap: 6px;
     padding: 10px;
     border-top: 1px solid #ddd;
+    background: white;
 }
 
-.input-bar input {
+.input-area input {
     flex: 1;
     padding: 10px;
     border-radius: 20px;
     border: 1px solid #ccc;
+    outline: none;
 }
 
-.input-bar button {
+.icon-btn {
     border: none;
+    background: #e0e0e0;
     border-radius: 50%;
-    width: 42px;
-    height: 42px;
-    background: #4f46e5;
+    padding: 10px 12px;
+    cursor: pointer;
+}
+
+.send-btn {
+    border: none;
+    background: #2575fc;
     color: white;
-    font-size: 18px;
+    border-radius: 50%;
+    padding: 10px 14px;
     cursor: pointer;
 }
